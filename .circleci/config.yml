@@ -1,0 +1,20 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: /go/src/liemlhd.com/golang/monorepo-example/
+    docker:
+    - image: golang:1.15
+    steps:
+    - checkout
+    - setup_remote_docker:
+        version: 18.06.0-ce
+    - run:
+        name: Build monorepo
+        shell: /bin/bash
+        environment: 
+          COMMIT_RANGE: <<pipeline.git.base_revision>>..<<pipeline.git.revision>>
+          CI_COMMIT_BEFORE_SHA: <<pipeline.git.base_revision>>
+          CI_COMMIT_SHA: <<pipeline.git.revision>>
+        command: |
+          chmod +x ./build.sh
+          ./build.sh
